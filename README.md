@@ -18,26 +18,4 @@ This project demonstrates GPU-accelerated relational database operators (Join an
 - NVIDIA CUDA Toolkit
 - A compatible NVIDIA GPU
 
-## Building the Project
-Use the provided Makefile to build the project by running:
 
-##Running the Project
-
-Run the executable with the following parameters:
-
-./HPC_RelOps [numRowsA] [numRowsB] [maxKeyRange] [repeats]
-
-
-##Example:
-
-
-./HPC_RelOps 100000 100000 50000 3
-
-
-##Project Structure
-
-HPC_Relational_Ops/
-├── README.md         # Project documentation
-├── Makefile          # Build instructions
-└── src/
-    └── HPC_RelOps.cu # Complete C++/CUDA source code for the project
