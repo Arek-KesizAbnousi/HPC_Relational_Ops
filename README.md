@@ -5,27 +5,29 @@ GPU-accelerated **Hash Join** and **Group-By aggregation** in CUDA C++, optimise
 ## Architecture
 
 ```
-           ┌──────────── GPU ─────────────┐
-           │                              │
-  Stream A │  H2D probe table (A)         │
-  ─────────┤                              │
-           │         ┌──────────────────┐ │
-  Stream B │  H2D build table (B) ──────► │ hashBuildKernel │ │
-  ─────────┤         └──────────────────┘ │
-           │              │               │
-           │   sync ──────┤               │
-           │              ▼               │
-           │    ┌──────────────────────┐  │
-           │    │   hashProbeKernel    │  │
-           │    └──────────────────────┘  │
-           │              │               │
-           │              ▼               │
-           │    ┌──────────────────────┐  │
-           │    │ groupByAtomicKernel  │  │
-           │    └──────────────────────┘  │
-           │              │               │
-           └──────────────┼───────────────┘
-                     D2H results
+                ┌──────────────────── GPU ────────────────────┐
+                │                                             │
+   Stream A ────┤  H2D probe table (A)                        │
+                │                                             │
+                │                  ┌────────────────────┐     │
+   Stream B ────┤  H2D build (B) → │  hashBuildKernel   │     │
+                │                  └────────────────────┘     │
+                │                          │                  │
+                │            sync ─────────┘                  │
+                │              │                              │
+                │              ▼                              │
+                │     ┌────────────────────┐                  │
+                │     │  hashProbeKernel   │                  │
+                │     └────────────────────┘                  │
+                │              │                              │
+                │              ▼                              │
+                │     ┌────────────────────┐                  │
+                │     │ groupByAtomicKernel│                  │
+                │     └────────────────────┘                  │
+                │              │                              │
+                └──────────────┼──────────────────────────────┘
+                               ▼
+                          D2H results
 ```
 
 ### Key design decisions
